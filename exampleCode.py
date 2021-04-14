@@ -1,7 +1,10 @@
+#!/usr/bin/env python 
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from random import randint
 import time
+
+state = 1
 
 class Creator(ABC):
     @abstractmethod
@@ -9,51 +12,54 @@ class Creator(ABC):
         pass
 
     def some_operation(self) -> str:
-
         product = self.factory_method()
 
-        result = f"Creator: The same creator's code has just worked with {product.operation()}"
+        result = f"El factory method ha lanzado {product.operation()}"
 
         return result
 
-class ConcreteCreatorTime(Creator):
+class CreatorToggle(Creator):
     def factory_method(self) -> Product:
-        if time.time_ns() % 2 == 0:
-            return ConcreteProduct1()
-        return ConcreteProduct2()
+        global state
+        if state == 1:
+            state *= -1
+            return Car()
+        state *= -1
+        return Boat()
 
-class ConcreteCreatorRandom(Creator):
+class CreatorRandom(Creator):
     def factory_method(self) -> Product:
 
         if randint(1,2) == 1:
-            return ConcreteProduct1()
+            return Car()
         
-        return ConcreteProduct2()
+        return Boat()
 
-class Product(ABC):
+class Vehicle(ABC):
     @abstractmethod
     def operation(self) -> str:
         pass
 
-class ConcreteProduct1(Product):
+class Car(Vehicle):
     def operation(self) -> str:
-        return "ConcreteProduct1"
+        return "Car"
 
-class ConcreteProduct2(Product):
+class Boat(Vehicle):
     def operation(self) -> str:
-        return "ConcreteProduct2"
+        return "Boat"
 
 if __name__ == "__main__":
-    print("Probando los diferentes Factory Methods")
-    print(" ")
-
     for i in range(5):
-        print("Ejemplo", i)
-        print("App: Launched with the ConcreteCreator1.")
-        print(ConcreteCreatorTime().some_operation())
-        print("\n")
+        print ("###############")
+        print ("## Ejemplo",i,"##")
+        print ("###############")
+        print("Usando ConcreteCreatorToggle.")
+        print(CreatorToggle().some_operation())
 
-        print("App: Launched with the ConcreteCreatorRandom.")
-        print(ConcreteCreatorRandom().some_operation())
-        print("\n")
+        print("")
+
+        print("Usando ConcreteCreatorRandom.")
+        print(CreatorRandom().some_operation())
+        print("")
+        print("")
 
